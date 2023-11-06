@@ -22,17 +22,19 @@
 #' \code{\link{importBehaviouralData}}
 #' @encoding UTF-8
 importNeuroData <- function(filepath) {
-  # File existence and readability check
+    # File existence and readability check
     if (!file.exists(filepath)) {
-    stop("File does not exist: ", filepath)
+        stop("File does not exist: ", filepath)
     }
     if (!file.access(filepath, 4)) {
         stop("File is not readable: ", filepath)
     }
     # Read and return data
-    neuroData <- read.table(filepath, header = TRUE, sep = "\t",
-                             stringsAsFactors = FALSE)
-    return(neuro_data)
+    neuroData <- read.table(filepath,
+        header = TRUE, sep = "\t",
+        stringsAsFactors = FALSE
+    )
+    return(neuroData)
 }
 
 #' Import Gene Expression Data
@@ -41,10 +43,11 @@ importNeuroData <- function(filepath) {
 #' The expected format is tab-delimited. It performs checks to ensure the
 #' file exists and can be read before loading the data.
 #'
-#' @param filepath A string representing the path to the gene expression data file.
+#' @param filepath A string representing the path to the gene expression data
+#' file.
 #' @return A `data.frame` containing gene expression data.
 #' @examples
-#' gene_data <- importGeneExpressionData("inst/extdata/gene_expression_data.txt")
+#' gene_data <- importGeneExpressionData("inst/extdata/expression_data.txt")
 #' head(gene_data)
 #' @export
 #' @seealso \code{\link{importNeuroData}}, \code{\link{importBehaviouralData}}
@@ -58,7 +61,8 @@ importGeneExpressionData <- function(filepath) {
         stop("File is not readable: ", filepath)
     }
     # Read and return data
-    gene_data <- read.table(filepath, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+    gene_data <- read.table(filepath, header = TRUE, sep = "\t",
+                            stringsAsFactors = FALSE)
     return(gene_data)
 }
 
@@ -68,13 +72,15 @@ importGeneExpressionData <- function(filepath) {
 #' tab-delimited format. Ensures that the file exists and is readable prior
 #' to importing the data.
 #'
-#' @param filepath A string representing the path to the behavioural assay data file.
+#' @param filepath A string representing the path to the behavioural assay data
+#' file.
 #' @return A `data.frame` containing behavioural assay data.
 #' @examples
 #' behaviour_data <- importBehaviouralData("inst/extdata/behavioural_data.csv")
 #' head(behaviour_data)
 #' @export
-#' @seealso \code{\link{importNeuroData}}, \code{\link{importGeneExpressionData}}
+#' @seealso \code{\link{importNeuroData}},
+#' \code{\link{importGeneExpressionData}}
 #' @encoding UTF-8
 importBehaviouralData <- function(filepath) {
     # File existence and readability check
@@ -85,7 +91,8 @@ importBehaviouralData <- function(filepath) {
         stop("File is not readable: ", filepath)
     }
     # Read and return data
-    behaviour_data <- read.csv(filepath, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+    behaviour_data <- read.csv(filepath, header = TRUE, sep = ",",
+                               stringsAsFactors = FALSE)
     return(behaviour_data)
 }
 
