@@ -61,9 +61,9 @@ importGeneExpressionData <- function(filepath) {
         stop("File is not readable: ", filepath)
     }
     # Read and return data
-    gene_data <- read.table(filepath, header = TRUE, sep = "\t",
+    geneData <- read.table(filepath, header = TRUE, sep = "\t",
                             stringsAsFactors = FALSE)
-    return(gene_data)
+    return(geneData)
 }
 
 #' Import Behavioural Data
@@ -91,9 +91,9 @@ importBehaviouralData <- function(filepath) {
         stop("File is not readable: ", filepath)
     }
     # Read and return data
-    behaviour_data <- read.csv(filepath, header = TRUE, sep = ",",
+    behaviourData <- read.csv(filepath, header = TRUE, sep = ",",
                                stringsAsFactors = FALSE)
-    return(behaviour_data)
+    return(behaviourData)
 }
 
 # [END]
