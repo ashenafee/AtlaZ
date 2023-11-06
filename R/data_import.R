@@ -62,7 +62,7 @@ importGeneExpressionData <- function(filepath) {
     }
     # Read and return data
     geneData <- read.table(filepath, header = TRUE, sep = "\t",
-                            stringsAsFactors = FALSE)
+                           stringsAsFactors = FALSE)
     return(geneData)
 }
 
@@ -87,12 +87,18 @@ importBehaviouralData <- function(filepath) {
     if (!file.exists(filepath)) {
         stop("File does not exist: ", filepath)
     }
-    if (!file.access(filepath, 4)) {
-        stop("File is not readable: ", filepath)
-    }
-    # Read and return data
-    behaviourData <- read.csv(filepath, header = TRUE, sep = ",",
-                               stringsAsFactors = FALSE)
+
+    # Wrap the file data read in a try-catch block to handle errors
+    behaviourData <- NULL
+    tryCatch({
+        # Read and return data
+        behaviourData <- read.csv(filepath, header = TRUE, sep = ",",
+                                  stringsAsFactors = FALSE)
+    }, error = function(e) {
+        # If an error occurs, print the error message and return NULL
+        print(e)
+    })
+
     return(behaviourData)
 }
 
