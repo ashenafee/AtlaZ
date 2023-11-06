@@ -1,0 +1,10 @@
+Package: AtlaZ
+Type: Package
+Title: Integrated Zebrafish Anatomy, Development and Behavioral Tracking Atlas
+Version: 0.1.0
+Author: Ashenafee Mandefro
+Maintainer: Ashenafee Mandefro <ashenafee.mandefro@mail.utoronto.ca>
+Description: To be worked on...
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
