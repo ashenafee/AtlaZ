@@ -8,7 +8,8 @@
 importBehaviouralData(filepath)
 }
 \arguments{
-\item{filepath}{A string representing the path to the behavioural assay data file.}
+\item{filepath}{A string representing the path to the behavioural assay data
+file.}
 }
 \value{
 A `data.frame` containing behavioural assay data.
@@ -23,5 +24,6 @@ behaviour_data <- importBehaviouralData("inst/extdata/behavioural_data.csv")
 head(behaviour_data)
 }
 \seealso{
-\code{\link{importNeuroData}}, \code{\link{importGeneExpressionData}}
+\code{\link{importNeuroData}},
+\code{\link{importGeneExpressionData}}
 }

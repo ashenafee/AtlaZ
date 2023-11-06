@@ -8,7 +8,8 @@
 importGeneExpressionData(filepath)
 }
 \arguments{
-\item{filepath}{A string representing the path to the gene expression data file.}
+\item{filepath}{A string representing the path to the gene expression data
+file.}
 }
 \value{
 A `data.frame` containing gene expression data.
@@ -19,7 +20,7 @@ The expected format is tab-delimited. It performs checks to ensure the
 file exists and can be read before loading the data.
 }
 \examples{
-gene_data <- importGeneExpressionData("inst/extdata/gene_expression_data.txt")
+gene_data <- importGeneExpressionData("inst/extdata/expression_data.txt")
 head(gene_data)
 }
 \seealso{
