@@ -1,23 +1,22 @@
 Package: AtlaZ
 Type: Package
-Title: Zebrafish Neurobehavioral Analysis and Visualization Toolkit
+Title: Zebrafish Neurobehavioural Analysis and Visualization Toolkit
 Version: 0.1.0
 Author: Ashenafee Mandefro
 Maintainer: Ashenafee Mandefro <ashenafee.mandefro@mail.utoronto.ca>
-Description: AtlaZ is a toolkit designed for the comprehensive
-analysis and visualization of zebrafish neurobehaviural data. This package 
-facilitates the integration of neuroanatomical data, gene expression
-profiles, and behavioural assays, enabling researchers to explore the
-neurological underpinnings of behavior in zebrafish.
-
-AtlaZ provides capabilities for real-time tracking of zebrafish responses to
-neurological stimuli, analysis of genetic influences on behavior, and the
-correlation of neural activity with observed behavioral patterns.
-
-Targeting researchers and scientists in neurogenetics, developmental
-neuroscience, and behavioral biology, AtlaZ is crafted to handle complex
-neurobehavioral data sets. The package includes user-friendly functions for
-data import, cleaning, annotation, analysis, and advanced visualization.
+Description: AtlaZ is a toolkit designed for comprehensive analysis and 
+    visualization of zebrafish neurobehavioural data. It facilitates the 
+    integration of neuroanatomical data, gene expression profiles, and 
+    behavioural assays, enabling researchers to explore the neurological 
+    underpinnings of behaviour in zebrafish. AtlaZ provides capabilities for 
+    real-time tracking of zebrafish responses to neurological stimuli, analysis 
+    of genetic influences on behaviour, and correlation of neural activity with 
+    observed behavioural patterns. Targeting researchers and scientists in 
+    neurogenetics, developmental neuroscience, and behavioural biology, AtlaZ 
+    is crafted to handle complex neurobehavioural data sets. The package 
+    includes user-friendly functions for data import, cleaning, annotation, 
+    analysis, and advanced visualization.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.2.3
