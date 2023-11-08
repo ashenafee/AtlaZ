@@ -58,6 +58,8 @@ plotDistanceOverTime <- function(behaviourData) {
 #' heatmapActivity(behaviourData)
 heatmapActivity <- function(behaviourData) {
     library(ggplot2)
+    xFish <- behaviourData$xFish
+    yFish <- behaviourData$yFish
     ggplot(behaviourData, aes(
         x = xFish,
         y = yFish
