@@ -5,25 +5,26 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
+- [Functions](./docs/functions.md)
 - [Contributing](../CONTRIBUTING.md)
 - [License](../LICENSE.md)
 - [Acknowledgements](#acknowledgements)
 - [TODO](#todo)
 
-## About <a name = "about"></a>
+## About
 
 AtlaZ is a toolkit designed for the comprehensive analysis and visualization of zebrafish neurobehavioural data. This package facilitates the integration of neuroanatomical data, gene expression profiles, and behavioural assays, enabling researchers to explore the neurological underpinnings of behavior in zebrafish.
 
 It is built as an R package, and is currently being developed as a part of a course project for [BCB410H1: Applied Bioinformatics](https://artsci.calendar.utoronto.ca/course/bcb410h1) during the Fall 2023 semester at the University of Toronto.
 
-## Getting Started <a name = "getting_started"></a>
+## Getting Started
 
 ### Prerequisites
 
 AtlaZ requires the following packages to be installed:
 
 - [Insert Dependencies Here...]()
-  
+
 ### Installing
 
 To install AtlaZ, run the following code in R:
@@ -32,7 +33,7 @@ To install AtlaZ, run the following code in R:
 devtools::install_github("github.com/ashenafee/AtlaZ")
 ```
 
-## Usage <a name = "usage"></a>
+## Usage
 
 ### Data
 
