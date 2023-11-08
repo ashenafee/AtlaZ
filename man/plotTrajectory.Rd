@@ -7,8 +7,8 @@
 plotTrajectory(behaviourData)
 }
 \arguments{
-\item{behaviourData}{A dataframe with columns: x_fish, y_fish, x_stim,
-y_stim, time.}
+\item{behaviourData}{A dataframe with columns: xFish, yFish, xStim,
+yStim, time.}
 }
 \value{
 A plot of the trajectory of fish and stimulus movement.

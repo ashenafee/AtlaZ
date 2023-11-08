@@ -9,10 +9,10 @@ annotateIAD(data)
 \arguments{
 \item{data}{A dataframe of position of the fish and the stimulus over time.
 The dataframe should have the following columns:
-- x_fish
-- y_fish
-- x_stim
-- y_stim
+- xFish
+- yFish
+- xStim
+- yStim
 - time}
 }
 \value{

@@ -7,8 +7,8 @@
 plotDistanceOverTime(behaviourData)
 }
 \arguments{
-\item{behaviourData}{A dataframe with columns: x_fish, y_fish, x_stim,
-y_stim, time.}
+\item{behaviourData}{A dataframe with columns: xFish, yFish, xStim,
+yStim, time.}
 }
 \value{
 A plot showing the distance of the fish from the stimulus over time.

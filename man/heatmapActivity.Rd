@@ -7,7 +7,7 @@
 heatmapActivity(behaviourData)
 }
 \arguments{
-\item{behaviourData}{A dataframe with columns: x_fish, y_fish.}
+\item{behaviourData}{A dataframe with columns: xFish, yFish.}
 }
 \value{
 A heatmap of fish activity.
