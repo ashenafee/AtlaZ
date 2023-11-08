@@ -84,7 +84,8 @@ heatmapActivity <- function(behaviourData) {
 #' @export
 #' @examples
 #' animateMovement(behaviourData, "animation.gif")
-animateMovement <- function(behaviourData, filename = "animation.gif") {
+animateMovement <- function(behaviourData, filename = "animation.gif", fps = 20,
+                            duration = 5) {
     library(ggplot2)
     library(gganimate)
     library(readr)
@@ -106,7 +107,7 @@ animateMovement <- function(behaviourData, filename = "animation.gif") {
         labs(color = "Type")
     p <- p + transition_time(time) + labs(title = "Time: {frame_time}")
 
-    g <- animate(p, duration = 5, fps = 20, width = 200, height = 200,
+    g <- animate(p, duration = duration, fps = fps, width = 1000, height = 1000,
                  renderer = gifski_renderer())
 
     anim_save(filename, g)

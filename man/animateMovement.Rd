@@ -4,7 +4,12 @@
 \alias{animateMovement}
 \title{Animation of Fish and Stimulus Movement}
 \usage{
-animateMovement(behaviourData, filename = "animation.gif")
+animateMovement(
+  behaviourData,
+  filename = "animation.gif",
+  fps = 20,
+  duration = 5
+)
 }
 \arguments{
 \item{behaviourData}{A dataframe with columns: xFish, yFish, xStim,

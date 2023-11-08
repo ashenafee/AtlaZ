@@ -2,6 +2,7 @@
 
 export(animateMovement)
 export(annotateIAD)
+export(generateData)
 export(heatmapActivity)
 export(importBehaviouralData)
 export(importGeneExpressionData)
