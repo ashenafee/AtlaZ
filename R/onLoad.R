@@ -1,4 +1,11 @@
-# Define the function that generates and stores the variable
+#' Fetch All Pathways
+#'
+#' This function fetches all zebrafish pathways from WikiPathways.
+#'
+#' @return A data frame containing all zebrafish pathways.
+#' @export
+#' @examples
+#' fetchAllPathways()
 fetchAllPathways <- local({
     pathways <- NULL
 
