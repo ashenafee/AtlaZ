@@ -20,7 +20,8 @@ A ggplot object representing the line plot.
 Plot gene expression values over developmental stages
 }
 \examples{
-data <- read.delim("./inst/extdata/ERAD_query_results.tsv", header = TRUE,
-                   stringsAsFactors = FALSE)
-plotGeneExpression(data, "slc35a5")
+# Load the data from a TSV but remove the first 4 lines (comments)
+data <- readr::read_tsv("./inst/extdata/ERAD_query_results.tsv", skip = 4)
+# Plot the expression of rara
+plotGeneExpression(data, "rara")
 }

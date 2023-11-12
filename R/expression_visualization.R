@@ -8,9 +8,10 @@
 #' @return A ggplot object representing the line plot.
 #' @export
 #' @examples
-#' data <- read.delim("./inst/extdata/ERAD_query_results.tsv", header = TRUE,
-#'                    stringsAsFactors = FALSE)
-#' plotGeneExpression(data, "slc35a5")
+#' # Load the data from a TSV but remove the first 4 lines (comments)
+#' data <- readr::read_tsv("./inst/extdata/ERAD_query_results.tsv", skip = 4)
+#' # Plot the expression of rara
+#' plotGeneExpression(data, "rara")
 plotGeneExpression <- function(data, gene) {
     # Check if ggplot2 is installed
     if (!requireNamespace("ggplot2", quietly = TRUE)) {
