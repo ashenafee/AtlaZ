@@ -2,6 +2,9 @@
 
 export(animateMovement)
 export(annotateIAD)
+export(displayPathwayById)
+export(fetchAllPathways)
+export(fetchPathwayById)
 export(generateData)
 export(heatmapActivity)
 export(importBehaviouralData)

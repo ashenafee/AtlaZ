@@ -8,7 +8,7 @@
 #' @examples
 #' selectPathwayById("WP554")
 selectPathwayById <- function(pathwayId) {
-    pathways <- fetchAllPathways()
+    pathways <- AtlaZ::fetchAllPathways()
     pathway <- pathways[pathways$id == pathwayId, ]
     return(pathway)
 }
