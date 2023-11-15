@@ -51,9 +51,9 @@ Processing**, **Data Analysis**, and **Data Visualization**.
 
 **Data Import**
 
-Function \| Description \|  
-`importGeneExpressionData(filepath: str)` \| Imports gene expression
-data from a file. \|
+| Function                                  | Description                               |
+|-------------------------------------------|-------------------------------------------|
+| `importGeneExpressionData(filepath: str)` | Imports gene expression data from a file. |
 
 **Data Processing**
 

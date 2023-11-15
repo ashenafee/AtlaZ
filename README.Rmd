@@ -53,6 +53,7 @@ AtlaZ contains four categories of functions: **Data Retrieval**, **Data Processi
 **Data Import**
 
 | Function | Description |
+| --- | --- |
 | `importGeneExpressionData(filepath: str)` | Imports gene expression data from a file. |
 
 **Data Processing**
