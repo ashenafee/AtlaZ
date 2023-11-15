@@ -1,0 +1,28 @@
+### Data Retrieval
+
+The functions in this category are used to retrieve data from ZFIN. The data retrieved by these functions is used by the functions in the **Data Analysis** and **Data Visualization** categories.
+
+| Function | Description |
+| --- | --- |
+| `downloadFromZfin(dataset: str, fileName: str, headers: bool)` | Downloads a dataset from ZFIN. |
+| `downloadFromZfinMultiple(data: data.frame)` | Downloads multiple datasets from ZFIN. |
+
+### Data Processing
+
+The functions in this category are used to process data that's been provided by the user. The data processed by these functions is used by the functions in the **Data Analysis** and **Data Visualization** categories.
+
+| Function | Description |
+| --- | --- |
+| `processExpressionData(data: data.frame)` | Processes gene expression data. |
+
+### Data Analysis
+
+The functions in this category are used to analyze data. The data analyzed by these functions is retrieved from ZFIN using the functions in the **Data Retrieval** category or processed using the functions in the **Data Processing** category.
+
+| Function | Description |
+| --- | --- |
+| `getExpressionLevels(gene: str, dataset: str)` | Gets the expression levels of a gene in different tissues. |
+| `getExpressionLevelsMultiple(genes: str, dataset: str)` | Gets the expression levels of multiple genes in different tissues. |
+
+
+

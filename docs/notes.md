@@ -14,9 +14,40 @@ install.packages(c("ada", "ipred", "evd"))
 install.packages(pkgs = pkgFile, type = "source", repos = NULL)
 unlink(pkgFile)
 ```
+
 *Code was adopted from [this](https://stackoverflow.com/a/24194531/7376957) StackOverflow answer.*
 
 Only after was I able to run
+
 ```r
 library(RCy3)
+```
+
+### Figuring Out Datasets
+
+I wasn't sure how to initially focus my efforts for finding expression data, so
+I decided to quantify how frequent each Assay was in ZFIN (my primary data
+source). The assays, in alphabetical order, are:
+
+- cDNA clones
+- Gene Product Function
+- Immunohistochemistry
+- Intrinsic fluorescence
+- Mass Spectrometry
+- mRNA in situ hybridization
+- Northern blot
+- Nuclease protection assay
+- other
+- Primer extension
+- Reverse transcription PCR
+- RNA Seq
+- Western blot
+
+To do this, I used the following code, where `x` is a `data.frame` of all WT
+expression data from ZFIN.
+
+```r
+for (col in unique(x$Assay)) {
+    print(paste0(col, ": ", nrow(x[x$Assay == col, ])))
+}
 ```

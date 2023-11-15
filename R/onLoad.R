@@ -22,3 +22,5 @@ fetchAllPathways <- local({
 .onLoad <- function(libname, pkgname) {
     fetchAllPathways()
 }
+
+# [END]
