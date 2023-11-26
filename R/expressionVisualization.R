@@ -7,21 +7,15 @@
 #'
 #' @return A ggplot object representing the line plot.
 #' @export
+#' @import ggplot2
 #' @examples
 #' # Load the data from a TSV but remove the first 4 lines (comments)
 #' data <- readr::read_tsv("./inst/extdata/ERAD_query_results.tsv", skip = 4)
 #' # Plot the expression of rara
 #' plotGeneExpression(data, "rara")
 plotGeneExpression <- function(data, gene) {
-    # Check if ggplot2 is installed
-    if (!requireNamespace("ggplot2", quietly = TRUE)) {
-        stop("ggplot2 package is required for this function to work.
-        Please install it.")
-    }
-
     # Subset the data for the selected gene. Check regardless of case.
     # Still must be an exact match.
-    # geneData <- data[data$`Gene Name` == gene, ]
     geneData <- data[grepl(gene, data$`Gene Name`, ignore.case = TRUE), ]
 
     # Reshape the data for plotting
