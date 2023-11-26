@@ -1,5 +1,14 @@
 #' Plot gene expression values over developmental stages
 #'
+#' This function creates a line plot of gene expression values for a specific
+#' gene over different developmental stages. The line plot is an effective way
+#' to visualize how the expression of a particular gene changes across different
+#' stages of development. Each point on the line corresponds to a gene
+#' expression value at a particular developmental stage, and the line's
+#' progression shows the trend of these values over time. This can help
+#' researchers identify patterns or anomalies in gene expression, which can be
+#' critical in understanding gene function and its role in development.
+#'
 #' @param data A data frame with gene expression values. The data frame should
 #' have one row per gene, and one column per developmental stage. The first
 #' column should be the gene names.
@@ -20,23 +29,32 @@ plotGeneExpression <- function(data, gene) {
 
     # Reshape the data for plotting
     geneDataLong <- tidyr::pivot_longer(geneData, -c(`Gene ID`, `Gene Name`),
-                                        names_to = "Stage",
-                                        values_to = "Expression")
+        names_to = "Stage",
+        values_to = "Expression"
+    )
 
     # Organize the stages in the correct order
 
 
     # Create the plot
-    plot <- ggplot2::ggplot(geneDataLong, ggplot2::aes(x = Stage,
-                                                       y = Expression,
-                                                       group = `Gene Name`)) +
+    plot <- ggplot2::ggplot(geneDataLong, ggplot2::aes(
+        x = Stage,
+        y = Expression,
+        group = `Gene Name`
+    )) +
         ggplot2::geom_line() +
-        ggplot2::labs(title = paste("Expression of", gene,
-                                    "over developmental stages"),
-                      x = "Developmental stage",
-                      y = "Expression value") +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90,
-                                                           hjust = 1))
+        ggplot2::labs(
+            title = paste(
+                "Expression of", gene,
+                "over developmental stages"
+            ),
+            x = "Developmental stage",
+            y = "Expression value"
+        ) +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(
+            angle = 90,
+            hjust = 1
+        ))
 
     return(plot)
 }
