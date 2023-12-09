@@ -4,12 +4,14 @@
 \alias{plotGeneExpression}
 \title{Plot gene expression values over developmental stages}
 \usage{
-plotGeneExpression(data, gene)
+plotGeneExpression(data, geneName, useLog = FALSE)
 }
 \arguments{
 \item{data}{A data frame with gene expression values. The data frame should
 have one row per gene, and one column per developmental stage. The first
 column should be the gene names.}
+
+\item{useLog}{A boolean indicating whether to use a log scale for the y-axis.}
 
 \item{gene}{The name of the gene to plot.}
 }
@@ -17,11 +19,18 @@ column should be the gene names.}
 A ggplot object representing the line plot.
 }
 \description{
-Plot gene expression values over developmental stages
+This function creates a line plot of gene expression values for a specific
+gene over different developmental stages. The line plot is an effective way
+to visualize how the expression of a particular gene changes across different
+stages of development. Each point on the line corresponds to a gene
+expression value at a particular developmental stage, and the line's
+progression shows the trend of these values over time. This can help
+researchers identify patterns or anomalies in gene expression, which can be
+critical in understanding gene function and its role in development.
 }
 \examples{
 # Load the data from a TSV but remove the first 4 lines (comments)
 data <- readr::read_tsv("./inst/extdata/ERAD_query_results.tsv", skip = 4)
-# Plot the expression of rara
-plotGeneExpression(data, "rara")
+# Plot the expression of rho over developmental stages with a log scale
+plotGeneExpression(data, "rho", TRUE)
 }
