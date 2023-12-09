@@ -24,54 +24,63 @@
 #' # Plot the expression of rho over developmental stages with a log scale
 #' plotGeneExpression(data, "rho", TRUE)
 plotGeneExpression <- function(data, geneName, useLog = FALSE) {
-  # Extract the row for the specified gene
-  geneData <- dplyr::filter(data, `Gene Name` == geneName)
+    # Extract the row for the specified gene
+    geneData <- dplyr::filter(data, `Gene Name` == geneName)
 
-  # Check if the gene exists in the dataset
-  if (nrow(geneData) == 0) {
-    stop("Specified gene not found in the data.")
-  }
+    # Check if the gene exists in the dataset
+    if (nrow(geneData) == 0) {
+        stop("Specified gene not found in the data.")
+    }
 
-  # Transform the data for plotting
-  longData <- tidyr::pivot_longer(geneData,
-                                  cols = -c(`Gene ID`, `Gene Name`),
-                                  names_to = "DevelopmentalStage",
-                                  values_to = "ExpressionValue"
-  )
-
-  # Identify NA stages and prepare them for annotation
-  naStages <- longData$DevelopmentalStage[is.na(longData$ExpressionValue)]
-  naStagesText <- paste("NA Stages:\n", paste(naStages, collapse = "\n"))
-
-  # Remove rows with NA in Expression Value
-  longData <- longData[!is.na(longData$ExpressionValue), ]
-
-  # Apply log transformation if specified
-  if (useLog) {
-    longData$ExpressionValue <- log1p(longData$ExpressionValue)
-  }
-
-  # Create the gene expression plot using ggplot2
-  plot <- ggplot2::ggplot(longData, ggplot2::aes(x = DevelopmentalStage, y = ExpressionValue, group = 1)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_point() +
-    ggplot2::xlab("Developmental Stage") +
-    ggplot2::ylab(ifelse(useLog, "Log Transformed Expression Value", "Expression Value")) +
-    ggplot2::ggtitle(paste("Expression of", geneName, "over Developmental Stages")) +
-    ggplot2::theme_minimal() +  # Start with a minimal theme
-    ggplot2::theme(
-      panel.background = element_rect(fill = "white", colour = "white"),  # Set the panel background to white
-      panel.grid.major = element_line(color = "#D3D3D3"),  # Set major grid lines to light grey
-      panel.grid.minor = element_line(color = "#D3D3D3", size = 0.25),  # Set minor grid lines to lighter grey and thinner
-      plot.background = element_rect(fill = "white", colour = NA),  # Set the plot background to white
-      axis.text.x = element_text(angle = 45, hjust = 1)  # Adjust the x-axis text
-    ) +
-    ggplot2::annotate("text",
-                      x = Inf, y = Inf, label = naStagesText,
-                      hjust = 1.05, vjust = 1.05, size = 3, color = "red", fontface = "bold"
+    # Transform the data for plotting
+    longData <- tidyr::pivot_longer(geneData,
+        cols = -c(`Gene ID`, `Gene Name`),
+        names_to = "DevelopmentalStage",
+        values_to = "ExpressionValue"
     )
 
-  return(plot)
+    # Identify NA stages and prepare them for annotation
+    naStages <- longData$DevelopmentalStage[is.na(longData$ExpressionValue)]
+    naStagesText <- paste("NA Stages:\n", paste(naStages, collapse = "\n"))
+
+    # Remove rows with NA in Expression Value
+    longData <- longData[!is.na(longData$ExpressionValue), ]
+
+    # Apply log transformation if specified
+    if (useLog) {
+        longData$ExpressionValue <- log1p(longData$ExpressionValue)
+    }
+
+    # Create the gene expression plot using ggplot2
+    plot <- ggplot2::ggplot(longData, ggplot2::aes(
+        x = DevelopmentalStage,
+        y = ExpressionValue, group = 1
+    )) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point() +
+        ggplot2::xlab("Developmental Stage") +
+        ggplot2::ylab(ifelse(useLog, "Log Transformed Expression Value",
+            "Expression Value"
+        )) +
+        ggplot2::ggtitle(paste(
+            "Expression of", geneName,
+            "over Developmental Stages"
+        )) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(
+            panel.background = element_rect(fill = "white", colour = "white"),
+            panel.grid.major = element_line(color = "#D3D3D3"),
+            panel.grid.minor = element_line(color = "#D3D3D3", size = 0.25),
+            plot.background = element_rect(fill = "white", colour = NA),
+            axis.text.x = element_text(angle = 45, hjust = 1)
+        ) +
+        ggplot2::annotate("text",
+            x = Inf, y = Inf, label = naStagesText,
+            hjust = 1.05, vjust = 1.05, size = 3, color = "red",
+            fontface = "bold"
+        )
+
+    return(plot)
 }
 
 
@@ -100,57 +109,71 @@ plotGeneExpression <- function(data, geneName, useLog = FALSE) {
 #' # scale
 #' plotMultipleGeneExpression(data, c("rho", "trpv1"), TRUE)
 plotMultipleGeneExpression <- function(data, geneNames, useLog = FALSE) {
-  # Initialize an empty data frame to hold all gene data
-  combinedLongData <- data.frame()
+    # Initialize an empty data frame to hold all gene data
+    combinedLongData <- data.frame()
 
-  # Loop through each gene name to extract and transform its data
-  for (geneName in geneNames) {
-    geneData <- dplyr::filter(data, `Gene Name` == geneName)
+    # Loop through each gene name to extract and transform its data
+    for (geneName in geneNames) {
+        geneData <- dplyr::filter(data, `Gene Name` == geneName)
 
-    if (nrow(geneData) == 0) {
-      warning(paste("Gene", geneName, "not found in the data."))
-      next
+        if (nrow(geneData) == 0) {
+            warning(paste("Gene", geneName, "not found in the data."))
+            next
+        }
+
+        longData <- tidyr::pivot_longer(geneData,
+            cols = -c(`Gene ID`, `Gene Name`),
+            names_to = "DevelopmentalStage",
+            values_to = "ExpressionValue"
+        )
+
+        longData$GeneName <- geneName
+
+        # Remove rows with NA in Expression Value
+        longData <- longData[!is.na(longData$ExpressionValue), ]
+
+        # Apply log transformation if specified
+        if (useLog) {
+            longData$ExpressionValue <- log1p(longData$ExpressionValue)
+        }
+
+        # Combine the data for this gene with the others
+        combinedLongData <- rbind(combinedLongData, longData)
     }
 
-    longData <- tidyr::pivot_longer(geneData,
-                                    cols = -c(`Gene ID`, `Gene Name`),
-                                    names_to = "DevelopmentalStage",
-                                    values_to = "ExpressionValue")
-
-    longData$GeneName <- geneName  # Add a column for the gene name
-
-    # Remove rows with NA in Expression Value
-    longData <- longData[!is.na(longData$ExpressionValue), ]
-
-    # Apply log transformation if specified
-    if (useLog) {
-      longData$ExpressionValue <- log1p(longData$ExpressionValue)
-    }
-
-    # Combine the data for this gene with the others
-    combinedLongData <- rbind(combinedLongData, longData)
-  }
-
-  # Create the gene expression plot using ggplot2
-  plot <- ggplot2::ggplot(combinedLongData, ggplot2::aes(x = DevelopmentalStage, y = ExpressionValue, group = GeneName, color = GeneName)) +
-    ggplot2::geom_line() +
-    ggplot2::geom_point() +
-    ggplot2::xlab("Developmental Stage") +
-    ggplot2::ylab(ifelse(useLog, "Log Transformed Expression Value", "Expression Value")) +
-    ggplot2::ggtitle(paste("Expression of", length(unique(combinedLongData$GeneName)), "genes over Developmental Stages")) +
-    ggplot2::guides(color = ggplot2::guide_legend(title = "Gene Name")) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      panel.background = element_rect(fill = "white", colour = "white"),
-      panel.grid.major = element_line(color = "#D3D3D3"),
-      panel.grid.minor = element_line(color = "#D3D3D3", size = 0.25),
-      plot.background = element_rect(fill = "white", colour = NA),
-      axis.text.x = element_text(angle = 45, hjust = 1)
-    )
+    # Create the gene expression plot using ggplot2
+    plot <- ggplot2::ggplot(combinedLongData, ggplot2::aes(
+        x = DevelopmentalStage,
+        y = ExpressionValue,
+        group = GeneName,
+        color = GeneName
+    )) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point() +
+        ggplot2::xlab("Developmental Stage") +
+        ggplot2::ylab(ifelse(useLog, "Log Transformed Expression Value",
+            "Expression Value"
+        )) +
+        ggplot2::ggtitle(paste(
+            "Expression of",
+            length(unique(combinedLongData$GeneName)),
+            "genes over Developmental Stages"
+        )) +
+        ggplot2::guides(color = ggplot2::guide_legend(title = "Gene Name")) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(
+            panel.background = element_rect(
+                fill = "white",
+                colour = "white"
+            ),
+            panel.grid.major = element_line(color = "#D3D3D3"),
+            panel.grid.minor = element_line(color = "#D3D3D3", size = 0.25),
+            plot.background = element_rect(fill = "white", colour = NA),
+            axis.text.x = element_text(angle = 45, hjust = 1)
+        )
 
     return(plot)
 }
-
 
 
 # [END]
