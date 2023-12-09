@@ -4,6 +4,10 @@
 #' ZFIN ID, expression levels at different developmental stages, and ontology
 #' information.
 #'
+#' This object will be used to keep track of the gene information and pass it
+#' around between functions. To initialize, it only requires the Ensembl ID
+#' passed in as a parameter. The other attributes can be added later.
+#'
 #' @slot ensemblID A character string representing the Ensembl ID of the gene.
 #' @slot zfinID A character string representing the ZFIN ID of the gene.
 #' @slot expressionByStage A list representing expression levels of the gene
