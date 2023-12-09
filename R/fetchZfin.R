@@ -1,5 +1,3 @@
-library(httr)
-
 #' Download Data from ZFIN (Single Dataset)
 #'
 #' This function downloads data from a specified ZFIN dataset.
@@ -14,6 +12,7 @@ library(httr)
 #' download.
 #' @return Downloads the specified dataset and saves it as a file.
 #' @export
+#' @import httr
 #'
 #' @examples
 #' downloadFromZfin("Zebrafish Anatomy Term", "sampleData.csv", TRUE)
@@ -24,50 +23,60 @@ downloadFromZfin <- function(dataset, fileName, headers) {
         "Zebrafish Anatomy Term" =
             list(
                 "url" = "https://zfin.org/downloads/anatomy_item.txt",
-                "headers" = c("Anatomy ID", "Anatomy Name", "Start Stage ID",
-                              "End Stage ID")
+                "headers" = c(
+                    "Anatomy ID", "Anatomy Name", "Start Stage ID",
+                    "End Stage ID"
+                )
             ),
         "Zebrafish Stage Series" =
             list(
                 "url" = "https://zfin.org/downloads/stage_ontology.txt",
-                "headers" = c("Stage ID", "Stage OBO ID", "Stage Name",
-                              "Begin Hours", "End Hours")
+                "headers" = c(
+                    "Stage ID", "Stage OBO ID", "Stage Name",
+                    "Begin Hours", "End Hours"
+                )
             ),
         # Gene Expression
         "Expression data for wildtype fish" =
             list(
                 "url" =
                 "https://zfin.org/downloads/wildtype-expression_fish.txt",
-                "headers" = c("Gene ID", "Gene Symbol", "Fish Name",
-                              "Super Structure ID", "Super Structure Name",
-                              "Sub Structure ID", "Sub Structure Name",
-                              "Start Stage", "End Stage", "Assay",
-                              "Assay MMO ID", "Publication ID",
-                              "Probe ID", "Antibody ID", "Fish ID")
+                "headers" = c(
+                    "Gene ID", "Gene Symbol", "Fish Name",
+                    "Super Structure ID", "Super Structure Name",
+                    "Sub Structure ID", "Sub Structure Name",
+                    "Start Stage", "End Stage", "Assay",
+                    "Assay MMO ID", "Publication ID",
+                    "Probe ID", "Antibody ID", "Fish ID"
+                )
             ),
         "Zebrafish Gene Expression by Stage and Anatomy Term" =
             list(
                 "url" = "https://zfin.org/downloads/xpat_stage_anatomy.txt",
-                "headers" = c("Expression Result ID", "Expression ID",
-                              "Start Stage ID", "End Stage ID",
-                              "Anatomy Super Term ID", "Anatomy Sub Term ID",
-                              "Expression Found")
+                "headers" = c(
+                    "Expression Result ID", "Expression ID",
+                    "Start Stage ID", "End Stage ID",
+                    "Anatomy Super Term ID", "Anatomy Sub Term ID",
+                    "Expression Found"
+                )
             ),
         # Phenotype Data
         "Gene Expression Phenotypes" =
             list(
                 "url" =
                 "https://zfin.org/downloads/gene_expression_phenotype.txt",
-                "headers" = c("Gene Symbol", "Gene ID", "RO Term", "RO ID",
-                              "Superstructure Name", "Superstructure ID",
-                              "Substructure Name", "Substructure ID",
-                              "Phenotype Keyword Name",
-                              "Phenotype Keyword ID", "Phenotype Tag",
-                              "Start Stage Name", "Start Stage ID",
-                              "End Stage Name", "End Stage ID", "Assay",
-                              "Assay MMO ID", "Probe ID", "Antibody Name",
-                              "Antibody ID", "Fish ID", "Environment ID",
-                              "Figure ID", "Publication ID", "PubMed ID")
+                "headers" = c(
+                    "Gene Symbol", "Gene ID", "RO Term", "RO ID",
+                    "Superstructure Name", "Superstructure ID",
+                    "Substructure Name", "Substructure ID",
+                    "Phenotype Keyword Name",
+                    "Phenotype Keyword ID", "Phenotype Tag",
+                    "Start Stage Name", "Start Stage ID",
+                    "End Stage Name", "End Stage ID", "Assay",
+                    "Assay MMO ID", "Probe ID", "Antibody Name",
+                    "Antibody ID", "Fish ID", "Environment ID",
+                    "Figure ID", "Publication ID", "PubMed ID"
+                )
             ),
         # ZFIN Alliance Data (1.0.1.4)
         "Expression" =
@@ -93,14 +102,15 @@ downloadFromZfin <- function(dataset, fileName, headers) {
 
     # Download the data
     if (headers) {
-
         # Attempt to download the data
         tryCatch(
             {
-                httr::GET(downloadUrl, timeout(600),
-                          write_disk(paste0("downloads/", fileName),
-                              overwrite = TRUE
-                          ))
+                httr::GET(
+                    downloadUrl, httr::timeout(600),
+                    httr::write_disk(paste0("downloads/", fileName),
+                        overwrite = TRUE
+                    )
+                )
                 message("Data downloaded to ", paste0("downloads/", fileName))
             },
             error = function(e) {
@@ -117,14 +127,15 @@ downloadFromZfin <- function(dataset, fileName, headers) {
         # Save the data with headers
         readr::write_tsv(data, paste0("downloads/", fileName))
     } else {
-
         # Attempt to download the data
         tryCatch(
             {
-                httr::GET(downloadUrl, timeout(600),
-                          write_disk(paste0("downloads/", fileName),
-                              overwrite = TRUE
-                          ))
+                httr::GET(
+                    downloadUrl, httr::timeout(600),
+                    httr::write_disk(paste0("downloads/", fileName),
+                        overwrite = TRUE
+                    )
+                )
                 message("Data downloaded to ", paste0("downloads/", fileName))
             },
             error = function(e) {
@@ -152,11 +163,11 @@ downloadFromZfin <- function(dataset, fileName, headers) {
 #'
 #' @examples
 #' downloadFromZfinMultiple(
-#'    data = data.frame(
-#'       dataset = c("Zebrafish Anatomy Term", "Zebrafish Stage Series"),
-#'       fileName = c("anatomy.csv", "stage.csv"),
-#'       headers = c(TRUE, TRUE)
-#'   )
+#'     data = data.frame(
+#'         dataset = c("Zebrafish Anatomy Term", "Zebrafish Stage Series"),
+#'         fileName = c("anatomy.csv", "stage.csv"),
+#'         headers = c(TRUE, TRUE)
+#'     )
 #' )
 downloadFromZfinMultiple <- function(data) {
     # Check if the downloads directory exists
@@ -187,6 +198,7 @@ downloadFromZfinMultiple <- function(data) {
     }
 }
 
+
 #' Access gene expression data from ZFIN
 #'
 #' @param zfinId A character string representing the gene's ZFIN ID.
@@ -195,27 +207,30 @@ downloadFromZfinMultiple <- function(data) {
 #' getZfinGeneExpression("ZDB-GENE-980526-284")
 #' getZfinGeneExpression("ZDB-GENE-000210-1")
 #' @export
+#' @importFrom dplyr filter
+#' @importFrom readr read_tsv
 getZfinGeneExpression <- function(zfinId) {
-  # Open downloads/wildtype-expression_fish.tsv if it exists
-  if (file.exists("downloads/wildtype-expression_fish.tsv")) {
-    zfinExpressionData <-
-      readr::read_tsv("downloads/wildtype-expression_fish.tsv")
-  } else {
-    # Download the data
-    zfinExpressionData <- downloadFromZfin(
-      "Expression data for wildtype fish",
-      "wildtype-expression_fish.tsv",
-      TRUE
-    )
-  }
+    # Open downloads/wildtype-expression_fish.tsv if it exists
+    if (file.exists("downloads/wildtype-expression_fish.tsv")) {
+        zfinExpressionData <-
+            readr::read_tsv("downloads/wildtype-expression_fish.tsv")
+    } else {
+        # Download the data
+        zfinExpressionData <- downloadFromZfin(
+            "Expression data for wildtype fish",
+            "wildtype-expression_fish.tsv",
+            TRUE
+        )
+    }
 
-  # Filter the data
-  zfinExpressionData <- zfinExpressionData %>%
-    dplyr::filter(`Gene ID` == zfinId)
+    # Filter the data
+    zfinExpressionData <- zfinExpressionData %>%
+        dplyr::filter(`Gene ID` == zfinId)
 
-  # Return the data
-  return(zfinExpressionData)
+    # Return the data
+    return(zfinExpressionData)
 }
+
 
 #' Access mutation information from ZFIN
 #'
@@ -226,26 +241,31 @@ getZfinGeneExpression <- function(zfinId) {
 #'
 #' @export
 getZfinMutatationInfo <- function(zfinId) {
-  # Construct the URL
-  url <- paste0("https://zfin.org/action/api/marker/",
-                zfinId, "/mutations?limit=10&page=1")
+    # Construct the URL
+    url <- paste0(
+        "https://zfin.org/action/api/marker/",
+        zfinId, "/mutations?limit=10&page=1"
+    )
 
-  # Fetch the JSON
-  json <- jsonlite::fromJSON(url, flatten = TRUE)
+    # Fetch the JSON
+    json <- jsonlite::fromJSON(url, flatten = TRUE)
 
-  # Fetch json[results]
-  json <- json$results
+    # Fetch json[results]
+    json <- json$results
 
-  # Clean up the column names
-  colnames(json) <- c("zdbID", "name", "abbreviation", "suppliers",
-                      "affectedGenes", "tgConstructs",
-                      "geneLocalizationStatement",
-                      "transcriptConsequenceStatement", "type", "typeDisplay",
-                      "mutagen")
+    # Clean up the column names
+    colnames(json) <- c(
+        "zdbID", "name", "abbreviation", "suppliers",
+        "affectedGenes", "tgConstructs",
+        "geneLocalizationStatement",
+        "transcriptConsequenceStatement", "type", "typeDisplay",
+        "mutagen"
+    )
 
-  # Return the mutation information
-  return(json)
+    # Return the mutation information
+    return(json)
 }
+
 
 #' Access information on the environment in which a gene is expressed. This is a
 #' list of anatomy, stage range, and cellular component data for a gene.
@@ -257,59 +277,65 @@ getZfinMutatationInfo <- function(zfinId) {
 #'
 #' @export
 getZfinBackgroundInfo <- function(zfinId) {
+    # Construct the URL
+    url <- paste0(
+        "https://zfin.org/action/api/marker/",
+        zfinId, "/expression/ribbon-summary"
+    )
 
-  # Construct the URL
-  url <- paste0("https://zfin.org/action/api/marker/",
-                zfinId, "/expression/ribbon-summary")
+    # Fetch the JSON
+    json <- jsonlite::fromJSON(url, flatten = TRUE)
 
-  # Fetch the JSON
-  json <- jsonlite::fromJSON(url, flatten = TRUE)
+    # Get the anatomy
+    anatomy <- getZfinAnatomy(json)
 
-  # Get the anatomy
-  anatomy <- getZfinAnatomy(json)
+    # Get the stage range
+    stageRange <- getZfinStageRange(json)
 
-  # Get the stage range
-  stageRange <- getZfinStageRange(json)
+    # Get the cellular component
+    cellularComponent <- getZfinCellularComponent(json)
 
-  # Get the cellular component
-  cellularComponent <- getZfinCellularComponent(json)
-
-  # Return the gene ZFIN ribbon summary
-  return(list(anatomy = anatomy, stageRange = stageRange,
-              cellularComponent = cellularComponent))
+    # Return the gene ZFIN ribbon summary
+    return(list(
+        anatomy = anatomy, stageRange = stageRange,
+        cellularComponent = cellularComponent
+    ))
 }
+
 
 #' Access anatomy information from ZFIN
 #'
 #' @param json A list containing gene ZFIN ribbon summary.
 #' @return A list containing anatomy information.
 getZfinAnatomy <- function(json) {
-  anatomy <- json[[1]]$groups
+    anatomy <- json[[1]]$groups
 
-  # Return the anatomy
-  return(anatomy[[1]])
+    # Return the anatomy
+    return(anatomy[[1]])
 }
+
 
 #' Access stage range information from ZFIN
 #'
 #' @param json A list containing gene ZFIN ribbon summary.
 #' @return A list containing stage range information.
 getZfinStageRange <- function(json) {
-  stageRange <- json[[1]]$groups
+    stageRange <- json[[1]]$groups
 
-  # Return the stage range
-  return(stageRange[[2]])
+    # Return the stage range
+    return(stageRange[[2]])
 }
+
 
 #' Access cellular component information from ZFIN
 #'
 #' @param json A list containing gene ZFIN ribbon summary.
 #' @return A list containing cellular component information.
 getZfinCellularComponent <- function(json) {
-  cellularComponent <- json[[1]]$groups
+    cellularComponent <- json[[1]]$groups
 
-  # Return the cellular component
-  return(cellularComponent[[3]])
+    # Return the cellular component
+    return(cellularComponent[[3]])
 }
 
 # [END]
