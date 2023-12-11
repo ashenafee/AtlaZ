@@ -1,14 +1,3 @@
-#' Remove rows with missing values from a dataframe
-#'
-#' @param data A dataframe from which to remove missing values.
-#' @return A dataframe with missing values removed.
-#' @examples
-#' removeNA(data)
-#' @export
-removeNA <- function(data) {
-    data[complete.cases(data), ]
-}
-
 #' Validate Gene Names
 #'
 #' This function checks whether the provided gene names are valid based on the
@@ -38,6 +27,7 @@ removeNA <- function(data) {
 #' data <- readr::read_tsv("path/to/dataset.tsv")
 #' validateGeneNames(c("BRCA1", "INVALIDGENE"), data)
 validateGeneNames <- function(geneNames, data) {
+    View(data)
     if (is.null(data)) {
         return(NULL)
     }
@@ -56,8 +46,5 @@ validateGeneNames <- function(geneNames, data) {
 
     return(NULL)
 }
-
-
-
 
 # [END]
