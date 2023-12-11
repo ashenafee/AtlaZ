@@ -123,6 +123,7 @@ To examine extra pieces of information on the gene, such as where its expressed 
 ![AtlaZ Analysis](../inst/extdata/step_4.png)
 
 You can scroll through the information to get more details about the gene.
+
 ----
 
 ```{r}
