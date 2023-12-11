@@ -113,7 +113,6 @@ getGeneInfo <- function(geneSymbols) {
     return(geneObjects)
 }
 
-
 #' Add anatomy information to a list of AnatomyList objects
 #'
 #' @param anatomyInfo A data frame of anatomy information.

@@ -1,3 +1,120 @@
+#' S4 class for holding anatomy information
+#'
+#' This class represents anatomy information and provides methods for accessing
+#' and manipulating it.
+#'
+#' @slot id The unique identifier of the anatomy.
+#' @slot label The label of the anatomy.
+#' @slot description The description of the anatomy.
+#'
+#' @exportClass Anatomy
+setClass("Anatomy",
+    slots = list(
+        id = "character",
+        label = "character",
+        description = "character"
+    )
+)
+
+#' Show an Anatomy Object
+#'
+#' Prints detailed information about an Anatomy object.
+#'
+#' @param object An Anatomy object.
+#' @export
+#' @method show Anatomy
+setMethod("show", "Anatomy", function(object) {
+    cat("\tLabel:", object@label, "\n")
+    cat("\tDescription:", object@description, "\n")
+})
+
+#' S4 class for holding a list of Anatomy objects
+#'
+#' This class represents a list of Anatomy objects, where each object
+#' corresponds to separate anatomy information.
+#'
+#' @slot anatomy A named list of Anatomy objects.
+#'
+#' @exportClass AnatomyList
+setClass("AnatomyList",
+    slots = list(
+        anatomy = "list"
+    )
+)
+
+#' Retrieve the list of anatomies from an AnatomyList object
+#'
+#' @param object An AnatomyList object
+#' @return A list of anatomies
+#' @export
+setGeneric("getAnatomy", function(object) {
+    standardGeneric("getAnatomy")
+})
+setMethod("getAnatomy", "AnatomyList", function(object) {
+    object@anatomy
+})
+
+#' Set the anatomy for an object
+#'
+#' This function sets the anatomy for an object of class "AnatomyList".
+#' The anatomy is stored in the @anatomy slot of the object.
+#'
+#' @param object An object of class "AnatomyList".
+#' @param value A list of anatomies to be set.
+#'
+#' @return The modified object with the anatomy set.
+#'
+#' @export
+setGeneric("setAnatomy", function(object, value) {
+    standardGeneric("setAnatomy")
+})
+setMethod("setAnatomy", "AnatomyList", function(object, value) {
+    object@anatomy <- value
+    return(object)
+})
+
+#' Add an anatomy to an AnatomyList object
+#'
+#' This function adds an anatomy to an object of class "AnatomyList".
+#' The anatomy is added to the @anatomy slot of the object.
+#'
+#' @param object An object of class "AnatomyList".
+#' @param anatomy An anatomy to be added.
+#'
+#' @return The modified object with the anatomy added.
+#'
+#' @export
+setGeneric("addAnatomy", function(object, anatomy) {
+    standardGeneric("addAnatomy")
+})
+setMethod("addAnatomy", "AnatomyList", function(object, anatomy) {
+    # Get the anatomy
+    anatomyList <- object@anatomy
+
+    # Get the anatomy ID
+    anatomyID <- anatomy@id
+
+    # Add the anatomy to the list
+    anatomyList[[anatomyID]] <- anatomy
+
+    # Set the anatomy
+    object@anatomy <- anatomyList
+
+    # Return the modified object
+    return(object)
+})
+
+#' Show an AnatomyList Object
+#'
+#' Prints detailed information about an AnatomyList object.
+#'
+#' @param object An AnatomyList object.
+#' @export
+#' @method show AnatomyList
+setMethod("show", "AnatomyList", function(object) {
+    print(object@anatomy)
+})
+
 #' S4 class for holding ontology information
 #'
 #' This class represents ontology information and provides methods for accessing
@@ -141,6 +258,8 @@ setMethod("show", "OntologyList", function(object) {
 #' @slot geneSymbol A character string representing the gene symbol.
 #' @slot ensemblID A character string representing the Ensembl ID of the gene.
 #' @slot zfinID A character string representing the ZFIN ID of the gene.
+#' @slot anatomy A list representing the anatomy information related to the
+#' gene.
 #' @slot ontology A list representing the ontology information related to the
 #' gene.
 #' @exportClass Gene
@@ -150,6 +269,7 @@ setClass(
         geneSymbol = "character",
         ensemblID = "character",
         zfinID = "character",
+        anatomy = "AnatomyList",
         ontology = "OntologyList"
     )
 )
@@ -171,13 +291,17 @@ setClass(
 #' @export
 #' @examples
 #' myGene <- createGene(ensemblID = "ENSG00000139618")
-createGene <- function(geneSymbol = NA_character_, ensemblID = NA_character_,
-                       zfinID = NA_character_, expressionByStage = list(),
-                       ontology = new("OntologyList", ontologies = list())) {
+createGene <- function(
+        geneSymbol = NA_character_,
+        ensemblID = NA_character_,
+        zfinID = NA_character_,
+        anatomy = new("AnatomyList", anatomy = list()),
+        ontology = new("OntologyList", ontologies = list())) {
     new("Gene",
         geneSymbol = geneSymbol,
         ensemblID = ensemblID,
         zfinID = zfinID,
+        anatomy = anatomy,
         ontology = ontology
     )
 }
@@ -214,6 +338,23 @@ setMethod("setOntology", "Gene", function(object, ontology) {
     return(object)
 })
 
+#' Set Anatomy Data for a Gene Object
+#'
+#' Updates the anatomy data of a Gene object.
+#'
+#' @param object A Gene object.
+#' @param anatomy A list of anatomy data related to the gene.
+#' @return The Gene object with updated anatomy data.
+#' @export
+#' @method setAnatomy Gene
+setGeneric("setAnatomy", function(object, anatomy) {
+    standardGeneric("setAnatomy")
+})
+setMethod("setAnatomy", "Gene", function(object, anatomy) {
+    object@anatomy <- anatomy
+    return(object)
+})
+
 #' Show a Gene Object
 #'
 #' Prints detailed information about a Gene object.
@@ -225,6 +366,8 @@ setMethod("show", "Gene", function(object) {
     cat("Gene Symbol:", object@geneSymbol, "\n")
     cat("Ensembl ID:", object@ensemblID, "\n")
     cat("ZFIN ID:", object@zfinID, "\n")
+    cat("Anatomy:\n")
+    print(object@anatomy)
     cat("Ontology:\n")
     print(object@ontology)
 })
