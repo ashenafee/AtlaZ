@@ -4,7 +4,7 @@
 \alias{plotGeneExpression}
 \title{Plot gene expression values over developmental stages}
 \usage{
-plotGeneExpression(data, geneName, useLog = FALSE)
+plotGeneExpression(data, geneName, stages, useLog = FALSE)
 }
 \arguments{
 \item{data}{A data frame with gene expression values. The data frame should

@@ -15,10 +15,10 @@ A data frame with 100 rows and 26 columns:
  stage.}
  \item{blastula 1k-cell}{The expression value at the blastula 1k-cell stage.}
  \item{blastula dome}{The expression value at the blastula dome stage.}
- \item{gastrula 50%-epiboly}{The expression value at the gastrula 50%-epiboly
+ \item{gastrula 50\%-epiboly}{The expression value at the gastrula 50%-epiboly
  stage.}
  \item{gastrula shield}{The expression value at the gastrula shield stage.}
- \item{gastrula 75%-epiboly}{The expression value at the gastrula 75%-epiboly
+ \item{gastrula 75\%-epiboly}{The expression value at the gastrula 75%-epiboly
  stage.}
  \item{segmentation 1-4 somites}{The expression value at the segmentation 1-4
  somites stage.}

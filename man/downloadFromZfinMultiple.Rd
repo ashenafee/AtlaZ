@@ -18,10 +18,10 @@ This function downloads data from multiple ZFIN datasets.
 }
 \examples{
 downloadFromZfinMultiple(
-   data = data.frame(
-      dataset = c("Zebrafish Anatomy Term", "Zebrafish Stage Series"),
-      fileName = c("anatomy.csv", "stage.csv"),
-      headers = c(TRUE, TRUE)
-  )
+    data = data.frame(
+        dataset = c("Zebrafish Anatomy Term", "Zebrafish Stage Series"),
+        fileName = c("anatomy.csv", "stage.csv"),
+        headers = c(TRUE, TRUE)
+    )
 )
 }

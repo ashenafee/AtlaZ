@@ -28,6 +28,8 @@ Imports:
   httr,
   readr,
   dplyr
+Suggests:
+    testthat
 LazyData: true
 RoxygenNote: 7.2.3
 Depends: 
