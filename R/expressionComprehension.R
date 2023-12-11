@@ -14,30 +14,129 @@
 #' # Extract the key features
 #' keyFeatures <- extractKeyFeatures(data)
 #' @export
-#' @importFrom stats which.max
-#' @importFrom stats which.min
 extractKeyFeatures <- function(df) {
     # Remove non-numeric columns
     numericDf <- df[sapply(df, is.numeric)]
 
-    # Get the gene IDs with max and min expression values for each developmental
-    # stage
-    maxGenes <- df$`Gene ID`[apply(numericDf, 2, which.max)]
-    minGenes <- df$`Gene ID`[apply(numericDf, 2, which.min)]
+    # Initialize a list to store the key information
+    keyFeatures <- list()
 
-    # Create a data frame with the gene IDs
-    keyFeatures <- data.frame(
-        Stage = colnames(numericDf),
-        MaxGeneID = maxGenes,
-        MinGeneID = minGenes
-    )
+    # Initialize lists to store max and min genes for each stage
+    maxGenesList <- list()
+    minGenesList <- list()
 
-    # Set the row names to the stages
-    rownames(keyFeatures) <- keyFeatures$Stage
-    keyFeatures$Stage <- NULL
+    # Set to store unique gene names
+    allUniqueGenes <- character(0)
 
-    # Return the data frame
+    # Iterate over each developmental stage and get the top 5 genes
+    for (stage in colnames(numericDf)) {
+        maxGeneNames <- getGeneNames(
+            numericDf[[stage]],
+            df$`Gene Name`,
+            top = TRUE,
+            n = 5
+        )
+        minGeneNames <- getGeneNames(
+            numericDf[[stage]],
+            df$`Gene Name`,
+            top = FALSE,
+            n = 5
+        )
+
+        maxGenesList[[stage]] <- strsplit(maxGeneNames, ", ")[[1]]
+        minGenesList[[stage]] <- strsplit(minGeneNames, ", ")[[1]]
+
+        # Collect unique genes
+        allUniqueGenes <- unique(c(
+            allUniqueGenes,
+            maxGenesList[[stage]],
+            minGenesList[[stage]]
+        ))
+    }
+
+    # Fetch information for all unique genes in one call
+    allGeneInfo <- getGeneInfo(allUniqueGenes)
+
+    # Extract ontology information for each gene
+    ontologyInfoList <- extractOntology(allGeneInfo)
+
+    # Save the ontology information to keyFeatures under 'Ontology'
+    keyFeatures$Ontology <- ontologyInfoList
+
+    # Save the max and min genes to keyFeatures
+    keyFeatures$MaxGenes <- maxGenesList
+    keyFeatures$MinGenes <- minGenesList
+
     return(keyFeatures)
+}
+
+
+#' Get the names of the top or bottom n genes
+#'
+#' This function takes a vector of gene expression values and returns the names
+#' of the top or bottom n genes.
+#'
+#' @param x A vector of gene expression values.
+#' @param geneNames A vector of gene names.
+#' @param top A boolean indicating whether to return the top or bottom n genes.
+#' @param n The number of genes to return.
+#' @return A character string containing the names of the top or bottom n genes.
+#' @examples
+#' # Load the data from a TSV but remove the first 4 lines (comments)
+#' data <- readr::read_tsv("./inst/extdata/ERAD_query_results.tsv", skip = 4)
+#' # Get the names of the top 5 genes
+#' topGenes <- getGeneNames(data$`Stage 1`, data$`Gene Name`, top = TRUE, n = 5)
+getGeneNames <- function(x, geneNames, top = TRUE, n = 5) {
+    if (top) {
+        indices <- order(x, decreasing = TRUE)[1:n]
+    } else {
+        indices <- order(x)[1:n]
+    }
+    return(paste(geneNames[indices], collapse = ", "))
+}
+
+
+#' Format the gene information for the AtlaZ LLM
+#'
+#' This function takes a list of ontology information for multiple genes and
+#' formats it in a suitable JSON format to be passed in to the AtlaZ LLM.
+#' The AtlaZ LLM is a modification of the Zephyr LLM available through Ollama.
+#' It has been modified to work with the specific format used by this package so
+#' it only focuses on summarising the expression information given the ontology
+#' information.
+#'
+#' @param ontologyInformation A list containing the ontology information for =
+#' multiple genes.
+#' @return A JSON string containing the gene information.
+#' @examples
+#' # Load the data from a TSV but remove the first 4 lines (comments)
+#' data <- readr::read_tsv("./inst/extdata/ERAD_query_results.tsv", skip = 4)
+#' # Extract the key features
+#' keyFeatures <- extractKeyFeatures(data)
+#' # Format the gene information for the AtlaZ LLM
+#' formattedFeatures <- formatForAtlaZ(keyFeatures$Ontology)
+#' @export
+#' @importFrom jsonlite toJSON
+formatForAtlaZ <- function(ontologyInformation) {
+    # Create a list to hold the gene information
+    geneInfo <- list()
+
+    # Create a list to hold the JSON value for each gene
+    jsonList <- list()
+
+    # Loop over the ontology information for each gene
+    for (gene in names(ontologyInformation)) {
+        # Get the ontology information for the gene
+        ontologyInfo <- ontologyInformation[[gene]]
+        # Assuming the first row contains the relevant information for the example
+        goTerms <- ontologyInfo$`Ontology Definition`
+        # Add the gene information to the list
+        geneInfo[[gene]] <- list(GO_Terms = goTerms)
+        # Add the gene information in JSON format to the list
+        jsonList[[gene]] <- jsonlite::toJSON(geneInfo[[gene]], auto_unbox = TRUE)
+    }
+
+    return(jsonList)
 }
 
 
@@ -142,4 +241,53 @@ getAiResponse <- function(prompt, seed = "") {
     )
 
     return(httr::content(response)$response)
+}
+
+
+#' Extract ontology information on a gene
+#'
+#' This function takes a data frame containing information on a gene and returns
+#' a data frame containing ontology information on the gene.
+#'
+#' @param geneInfo A data frame containing information on the gene.
+#' @return A data frame containing ontology information on the gene.
+#' @examples
+#' # Fetch ontology information on the gene
+#' geneInfo <- getGeneInfo("rho")
+#' ontology <- extractOntology(geneInfo)
+#' @export
+extractOntology <- function(geneInfoList) {
+    # Check if geneInfoList is a valid list
+    if (is.null(geneInfoList) || !is.list(geneInfoList)) {
+        return(list())
+    }
+
+    # Initialize an empty list to store ontology data frames
+    ontologyDfList <- list()
+
+    # Iterate over each geneInfo data frame in the list
+    for (geneSymbol in names(geneInfoList)) {
+        geneInfo <- geneInfoList[[geneSymbol]]
+
+        # Skip if geneInfo is empty or not a data frame
+        if (is.null(geneInfo) || !is.data.frame(geneInfo) || nrow(geneInfo) == 0) {
+            ontologyDfList[[geneSymbol]] <- data.frame() # Assign an empty data frame
+            next
+        }
+
+        # Extract ontology information
+        ontologyDf <- geneInfo[, c("go_id", "name_1006", "definition_1006", "namespace_1003"), drop = FALSE]
+
+        # Rename columns for clarity
+        colnames(ontologyDf) <- c("Ontology ID", "Ontology Name", "Ontology Definition", "Ontology Namespace")
+
+        # Remove rows with NA in all ontology columns
+        ontologyDf <- ontologyDf[rowSums(is.na(ontologyDf)) < ncol(ontologyDf), ]
+
+        # Store the data frame in the list under the gene symbol
+        ontologyDfList[[geneSymbol]] <- ontologyDf
+    }
+
+    # Return the list of ontology data frames
+    return(ontologyDfList)
 }
