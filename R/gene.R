@@ -173,9 +173,12 @@ setClass(
 #' myGene <- createGene(ensemblID = "ENSG00000139618")
 createGene <- function(geneSymbol = NA_character_, ensemblID = NA_character_,
                        zfinID = NA_character_, expressionByStage = list(),
-                       ontology = list()) {
+                       ontology = new("OntologyList", ontologies = list())) {
     new("Gene",
-        geneSymbol = geneSymbol, ensemblID = ensemblID, zfinID = zfinID
+        geneSymbol = geneSymbol,
+        ensemblID = ensemblID,
+        zfinID = zfinID,
+        ontology = ontology
     )
 }
 
