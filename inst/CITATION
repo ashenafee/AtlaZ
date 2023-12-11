@@ -1,0 +1,12 @@
+citHeader("To cite AtlaZ in publications use:")
+
+citEntry(entry = "Unpublished",
+  title        = "AtlaZ: Exploring Zebrafish Gene Expression Across Development
+  author       = "Ashenafee Mandefro",
+  note         = "Unpublished",
+  year         = "2023",
+
+  textVersion  =
+  paste("Mandefro, A.A. (2023) AtlaZ: Exploring Zebrafish Gene Expression Across Development.
+        Unpublished. URL https://github.com/ashenafee/AtlaZ.")
+)

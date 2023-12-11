@@ -1,23 +1,23 @@
 Package: AtlaZ
 Type: Package
-Title: Zebrafish Neurobehavioural Analysis and Visualization Toolkit
+Title: Zebrafish Developmental Genetics Analysis and Visualization Toolkit
 Version: 0.1.0
 Authors@R: c(
   person("Ashenafee", "Mandefro", email = "ashenafee.mandefro@mail.utoronto.ca", role = c("aut", "cre"))
   )
 Maintainer: Ashenafee Mandefro <ashenafee.mandefro@mail.utoronto.ca>
 Description: AtlaZ is a toolkit designed for comprehensive analysis and 
-    visualization of zebrafish neurobehavioural data. It facilitates the 
-    integration of neuroanatomical data, gene expression profiles, and 
-    behavioural assays, enabling researchers to explore the neurological 
-    underpinnings of behaviour in zebrafish. AtlaZ provides capabilities for 
-    real-time tracking of zebrafish responses to neurological stimuli, analysis 
-    of genetic influences on behaviour, and correlation of neural activity with 
-    observed behavioural patterns. Targeting researchers and scientists in 
-    neurogenetics, developmental neuroscience, and behavioural biology, AtlaZ 
-    is crafted to handle complex neurobehavioural data sets. The package 
-    includes user-friendly functions for data import, cleaning, annotation, 
-    analysis, and advanced visualization.
+    visualization of zebrafish gene expression data. It facilitates the 
+    integration of gene expression data across developmental stages with
+    information such as anatomical data to where these genes are expressed and
+    ontological data for their function(s), enabling researchers to explore the
+    genetic pieces that are likely to be involved in going from one stage to
+    another. Targeting researchers and scientists in genetics, and developmental
+    biology, AtlaZ provides a dataset of baseline gene expression profiles for
+    the entire genome across 15+ developmental stages for full visualization
+    with in-depth information (i.e., anatomy, ontology). It also offers a way
+    to visualize user-uploaded data, provided that the data is in the same
+    format as the baseline data.
 License: GPL-3
 Encoding: UTF-8
 Imports:
