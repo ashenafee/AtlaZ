@@ -36,6 +36,8 @@ plotGeneExpression <- function(data, geneName, stages, useLog = FALSE) {
         values_to = "ExpressionValue"
     )
 
+    longData$GeneName <- geneName
+
     # Filter the data for the specified stages
     if (!is.null(stages)) {
         longData <- longData[longData$DevelopmentalStage %in% stages, ]
@@ -49,7 +51,8 @@ plotGeneExpression <- function(data, geneName, stages, useLog = FALSE) {
     # Create the plot
     plot <- ggplot2::ggplot(longData, ggplot2::aes(
         x = DevelopmentalStage,
-        y = ExpressionValue
+        y = ExpressionValue,
+        group = GeneName
     )) +
         ggplot2::geom_line() +
         ggplot2::geom_point() +
@@ -67,10 +70,8 @@ plotGeneExpression <- function(data, geneName, stages, useLog = FALSE) {
             hjust = 1
         ))
 
-    return(plot)
+    return(list(plot = plot, longData = longData))
 }
-
-
 
 #' Plot gene expression values over developmental stages for multiple genes
 #'
@@ -164,7 +165,8 @@ plotMultipleGeneExpression <- function(data, geneNames, stages,
             hjust = 1
         ))
 
-    return(plot)
+    # Return the plot and the long data
+    return(list(plot = plot, longData = combinedLongData))
 }
 
 
