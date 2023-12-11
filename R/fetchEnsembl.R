@@ -11,6 +11,17 @@
 #' getGeneInfo(c("raraa", "rargb"))
 #' @export
 getGeneInfo <- function(geneSymbols) {
+
+    # Check if geneSymbols is a character vector
+    if (!is.character(geneSymbols)) {
+        stop("geneSymbols must be a character vector")
+    }
+
+    # Check if geneSymbols is empty
+    if (length(geneSymbols) == 0) {
+        return(list())
+    }
+
     # Use the zebrafish gene dataset from Ensembl
     ensembl <- biomaRt::useEnsembl(
         biomart = "genes",
@@ -44,26 +55,58 @@ getGeneInfo <- function(geneSymbols) {
         mart = ensembl
     )
 
-    # Create a list where each entry is a data frame containing information on a
-    # single gene
+    # Create a list to store the Gene objects
+    geneObjects <- list()
 
-    # Create a list of gene symbols
-    geneSymbols <- unique(results$external_gene_name)
+    # Create a named list of OntologyList objects
+    ontologyLists <- lapply(geneSymbols, function(x) {
+        new("OntologyList", ontologies = list())
+    })
+    names(ontologyLists) <- geneSymbols
 
-    # Create a list of data frames
-    geneInfo <- lapply(geneSymbols, function(geneSymbol) {
-        # Filter the results to only include the current gene symbol
+    # Loop through the gene symbols
+    for (geneSymbol in geneSymbols) {
+        # Get the gene information for the current gene symbol
         geneInfo <- results[results$external_gene_name == geneSymbol, ]
 
-        # Return the gene information
-        return(geneInfo)
-    })
+        if (nrow(geneInfo) == 0) {
+            # Skip the current gene symbol if there is no gene information
+            next
+        }
 
-    # Make the genes accessible by their symbol
-    names(geneInfo) <- geneSymbols
+        # Loop through the rows of gene information for the current gene symbol
+        for (i in seq_len(nrow(geneInfo))) {
+            # Create a new Ontology object if there's a valid GO ID
+            if (geneInfo$go_id[i] == "") {
+                next
+            }
+            ontology <- new("Ontology",
+                id = geneInfo$go_id[i],
+                name = geneInfo$name_1006[i],
+                definition = geneInfo$definition_1006[i],
+                namespace = geneInfo$namespace_1003[i],
+                description = geneInfo$description[i]
+            )
 
-    # Return the gene information
-    return(geneInfo)
+            # Add the Ontology object to the OntologyList object for the current
+            # gene symbol
+            ontologyLists[[geneSymbol]] <-
+                AtlaZ::addOntology(ontologyLists[[geneSymbol]], ontology)
+        }
+
+        # Create a new Gene object
+        gene <- new("Gene",
+            geneSymbol = geneSymbol,
+            ensemblID = geneInfo$ensembl_gene_id[1],
+            zfinID = geneInfo$zfin_id_id[1],
+            ontology = ontologyLists[[geneSymbol]]
+        )
+
+        # Add the Gene object to the list of Gene objects
+        geneObjects[[geneSymbol]] <- gene
+    }
+
+    return(geneObjects)
 }
 
 # [END]
