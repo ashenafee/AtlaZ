@@ -10,6 +10,7 @@ test_that("createGene creates a Gene object with the specified attributes", {
     expect_equal(gene@geneSymbol, "ABC")
     expect_equal(gene@ensemblID, "ENSG00000139618")
     expect_equal(gene@zfinID, "ZFIN123")
+    expect_equal(gene@anatomy, new("AnatomyList", anatomy = list()))
     expect_equal(gene@ontology, new("OntologyList", ontologies = list()))
 })
 
