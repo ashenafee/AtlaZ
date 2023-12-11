@@ -1,3 +1,127 @@
+#' S4 class for holding ontology information
+#'
+#' This class represents ontology information and provides methods for accessing
+#' and manipulating it.
+#'
+#' @slot id The unique identifier of the ontology.
+#' @slot name The name of the ontology.
+#' @slot definition The definition of the ontology.
+#' @slot namespace The namespace of the ontology.
+#' @slot description The description of the ontology.
+#'
+#' @exportClass Ontology
+setClass("Ontology",
+    slots = list(
+        id = "character",
+        name = "character",
+        definition = "character",
+        namespace = "character",
+        description = "character"
+    )
+)
+
+#' Show an Ontology Object
+#'
+#' Prints detailed information about an Ontology object.
+#'
+#' @param object An Ontology object.
+#' @export
+#' @method show Ontology
+setMethod("show", "Ontology", function(object) {
+    cat("\tName:", object@name, "\n")
+    cat("\tDefinition:", object@definition, "\n")
+    cat("\tNamespace:", object@namespace, "\n")
+    cat("\tDescription:", object@description, "\n")
+})
+
+#' S4 class for holding a list of Ontology objects
+#'
+#' This class represents a list of Ontology objects, where each object
+#' corresponds to a developmental stage.
+#'
+#' @slot ontologies A named list of Ontology objects. The names are the
+#' developmental stages.
+#'
+#' @exportClass OntologyList
+setClass("OntologyList",
+    slots = list(
+        ontologies = "list"
+    )
+)
+
+#' Retrieve the list of ontologies from an OntologyList object
+#'
+#' @param object An OntologyList object
+#' @return A list of ontologies
+#' @export
+setGeneric("getOntologies", function(object) {
+    standardGeneric("getOntologies")
+})
+setMethod("getOntologies", "OntologyList", function(object) {
+    object@ontologies
+})
+
+#' Set the ontologies for an object
+#'
+#' This function sets the ontologies for an object of class "OntologyList".
+#' The ontologies are stored in the @ontologies slot of the object.
+#'
+#' @param object An object of class "OntologyList".
+#' @param value A list of ontologies to be set.
+#'
+#' @return The modified object with the ontologies set.
+#'
+#' @export
+setGeneric("setOntologies", function(object, value) {
+    standardGeneric("setOntologies")
+})
+setMethod("setOntologies", "OntologyList", function(object, value) {
+    object@ontologies <- value
+    return(object)
+})
+
+#' Add an ontology to an OntologyList object
+#'
+#' This function adds an ontology to an object of class "OntologyList".
+#' The ontology is added to the @ontologies slot of the object.
+#'
+#' @param object An object of class "OntologyList".
+#' @param ontology An ontology to be added.
+#'
+#' @return The modified object with the ontology added.
+#'
+#' @export
+setGeneric("addOntology", function(object, ontology) {
+    standardGeneric("addOntology")
+})
+setMethod("addOntology", "OntologyList", function(object, ontology) {
+    # Get the ontologies
+    ontologies <- object@ontologies
+
+    # Get the ontology ID
+    ontologyID <- ontology@id
+
+    # Add the ontology to the list
+    ontologies[[ontologyID]] <- ontology
+
+    # Set the ontologies
+    object@ontologies <- ontologies
+
+    # Return the modified object
+    return(object)
+})
+
+#' Show an OntologyList Object
+#'
+#' Prints detailed information about an OntologyList object.
+#'
+#' @param object An OntologyList object.
+#' @export
+#' @method show OntologyList
+setMethod("show", "OntologyList", function(object) {
+    print(object@ontologies)
+})
+
 #' S4 Class Representing a Gene
 #'
 #' This S4 class represents a gene with various attributes including Ensembl ID,
@@ -8,28 +132,34 @@
 #' around between functions. To initialize, it only requires the Ensembl ID
 #' passed in as a parameter. The other attributes can be added later.
 #'
+#' @name Gene
+#' @title S4 Class Representing a Gene
+#' @description This S4 class represents a gene with various attributes
+#' including Ensembl ID, ZFIN ID, expression levels at different developmental
+#' stages, and ontology information.
+#'
+#' @slot geneSymbol A character string representing the gene symbol.
 #' @slot ensemblID A character string representing the Ensembl ID of the gene.
 #' @slot zfinID A character string representing the ZFIN ID of the gene.
-#' @slot expressionByStage A list representing expression levels of the gene
-#' across different developmental stages.
 #' @slot ontology A list representing the ontology information related to the
 #' gene.
 #' @exportClass Gene
 setClass(
     "Gene",
     slots = c(
+        geneSymbol = "character",
         ensemblID = "character",
         zfinID = "character",
-        expressionByStage = "list",
-        ontology = "list"
+        ontology = "OntologyList"
     )
 )
 
 #' Constructor for Gene Object
 #'
-#' Creates a new Gene object with the specified Ensembl ID, ZFIN ID, expression
-#' data, and ontology.
+#' Creates a new Gene object with the specified gene symbol, Ensembl ID,
+#' ZFIN ID, expression data, and ontology.
 #'
+#' @param geneSymbol A character string for the gene symbol (default is NA).
 #' @param ensemblID A character string for the Ensembl ID of the gene (default
 #' is NA).
 #' @param zfinID A character string for the ZFIN ID of the gene (default is NA).
@@ -41,11 +171,11 @@ setClass(
 #' @export
 #' @examples
 #' myGene <- createGene(ensemblID = "ENSG00000139618")
-createGene <- function(ensemblID = NA_character_, zfinID = NA_character_,
-                       expressionByStage = list(), ontology = list()) {
+createGene <- function(geneSymbol = NA_character_, ensemblID = NA_character_,
+                       zfinID = NA_character_, expressionByStage = list(),
+                       ontology = list()) {
     new("Gene",
-        ensemblID = ensemblID, zfinID = zfinID,
-        expressionByStage = expressionByStage, ontology = ontology
+        geneSymbol = geneSymbol, ensemblID = ensemblID, zfinID = zfinID
     )
 }
 
@@ -61,23 +191,6 @@ createGene <- function(ensemblID = NA_character_, zfinID = NA_character_,
 setGeneric("setZfinID", function(object, zfinID) standardGeneric("setZfinID"))
 setMethod("setZfinID", "Gene", function(object, zfinID) {
     object@zfinID <- zfinID
-    return(object)
-})
-
-#' Set Expression Data by Developmental Stage for a Gene Object
-#'
-#' Updates the expression data by developmental stage of a Gene object.
-#'
-#' @param object A Gene object.
-#' @param expressionByStage A list of expression data by developmental stage.
-#' @return The Gene object with updated expression data.
-#' @export
-#' @method setExpressionByStage Gene
-setGeneric("setExpressionByStage", function(object, expressionByStage) {
-    standardGeneric("setExpressionByStage")
-})
-setMethod("setExpressionByStage", "Gene", function(object, expressionByStage) {
-    object@expressionByStage <- expressionByStage
     return(object)
 })
 
@@ -106,10 +219,11 @@ setMethod("setOntology", "Gene", function(object, ontology) {
 #' @export
 #' @method show Gene
 setMethod("show", "Gene", function(object) {
+    cat("Gene Symbol:", object@geneSymbol, "\n")
     cat("Ensembl ID:", object@ensemblID, "\n")
     cat("ZFIN ID:", object@zfinID, "\n")
-    cat("Expression by Stage:\n")
-    print(object@expressionByStage)
     cat("Ontology:\n")
     print(object@ontology)
 })
+
+# [END]
